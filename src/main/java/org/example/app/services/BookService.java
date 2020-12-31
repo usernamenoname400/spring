@@ -33,7 +33,7 @@ public class BookService {
       return bookRepo.retrieveAll();
     } else {
       logger.info("with filters");
-      Stream<Book > books = bookRepo.retrieveAll().stream()
+      return bookRepo.retrieveAll().stream()
           .filter(book ->
                       filterByAuthor.isEmpty() ||
                       book.getAuthor().matches(filterByAuthor.replace("*", "(.+)")))
@@ -42,8 +42,8 @@ public class BookService {
                       book.getTitle().matches(filterByTitle.replace("*", "(.+)")))
           .filter(book ->
                       filterBySize == null ||
-                      book.getSize().equals(filterBySize));
-      return new ArrayList<>(books.collect(Collectors.toList()));
+                      book.getSize().equals(filterBySize))
+          .collect(Collectors.toList());
     }
   }
 
