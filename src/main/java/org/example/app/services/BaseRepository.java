@@ -14,7 +14,7 @@ public abstract class BaseRepository<T extends BaseItem> implements ProjectRepos
     return new ArrayList<>(repo);
   }
 
-  public boolean removeItemById(Integer itemIdToRemove) {
+  public boolean removeItemById(String itemIdToRemove) {
     T item = findItemById(itemIdToRemove);
     if (item != null) {
       repo.remove(item);
@@ -23,7 +23,7 @@ public abstract class BaseRepository<T extends BaseItem> implements ProjectRepos
     return false;
   }
 
-  public T findItemById(Integer itemIdToFind) {
+  public T findItemById(String itemIdToFind) {
     for (T item: retrieveAll()) {
       if (item.getId().equals(itemIdToFind)) {
         return item;

@@ -12,7 +12,7 @@ public class UserRepository extends BaseRepository<User> {
   public UserRepository() {
     User user = new User();
     // add root user
-    user.setId("root".hashCode()); // generate id based on login !should be unique!
+    user.setId("root"); // generate id based on login !should be unique!
     user.setLogin("root");
     user.setPassword("123");
     user.setName("Super user");
@@ -27,7 +27,7 @@ public class UserRepository extends BaseRepository<User> {
 
   @Override
   public boolean store(User user) {
-    user.setId(user.getLogin().hashCode()); // generate id based on login !should be unique!
+    user.setId(user.getLogin()); // generate id based on login !should be unique!
     User storedUser = findItemById(user.getId());
     if (storedUser == null) {
       repo.add(user);

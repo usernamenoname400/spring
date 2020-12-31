@@ -5,12 +5,8 @@ import org.example.web.dto.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class BookService {
@@ -20,6 +16,14 @@ public class BookService {
   @Autowired
   public BookService(BookRepository bookRepo) {
     this.bookRepo = bookRepo;
+  }
+
+  private void defaultInit() {
+    logger.info("DEFAULT INIT (" + this.getClass().getName() + ")");
+  }
+
+  private void defaultDestroy() {
+    logger.info("DEFAULT DESTROY (" + this.getClass().getName() + ")");
   }
 
   public List<Book> getAllBooks(String filterByAuthor, String filterByTitle, Integer filterBySize) {
@@ -56,7 +60,7 @@ public class BookService {
     }
   }
 
-  public boolean removeBook(Integer idToRemove, String authorToRemove, String titleToRemove, Integer sizeToRemove) {
+  public boolean removeBook(String idToRemove, String authorToRemove, String titleToRemove, Integer sizeToRemove) {
     logger.info("Remove book: id=" + idToRemove + ", author='" + authorToRemove + "', title='" + titleToRemove + "', " +
                 "size=" + sizeToRemove);
     if (idToRemove != null) {
