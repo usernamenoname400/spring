@@ -33,21 +33,16 @@ public class BookService {
       return bookRepo.retrieveAll();
     } else {
       logger.info("with filters");
-      Stream<Book > books = bookRepo.retrieveAll().stream().filter(new Predicate<Book>() {
-        private boolean isMatch(String filter, String param) {
-          return filter == null || filter.equals("") ||
-                 (param != null && param.matches(filter.replace("*", ".+")));
-        }
-        private boolean isMatch(Integer filter, Integer param) {
-          return filter == null || filter.intValue() < 0 ||
-                 (param != null && param.equals(filter));
-        }
-        @Override
-        public boolean test(Book book) {
-          return (isMatch(filterByAuthor, book.getAuthor()) && isMatch(filterByTitle, book.getTitle()) &&
-              isMatch(filterBySize, book.getSize()));
-        }
-      });
+      Stream<Book > books = bookRepo.retrieveAll().stream()
+          .filter(book ->
+                      filterByAuthor.isEmpty() ||
+                      book.getAuthor().matches(filterByAuthor.replace("*", "(.+)")))
+          .filter(book ->
+                      filterByTitle.isEmpty() ||
+                      book.getTitle().matches(filterByTitle.replace("*", "(.+)")))
+          .filter(book ->
+                      filterBySize == null ||
+                      book.getSize().equals(filterBySize));
       return new ArrayList<>(books.collect(Collectors.toList()));
     }
   }
@@ -55,7 +50,7 @@ public class BookService {
   public void saveBook(Book book) {
     if (!book.getAuthor().isEmpty() || !book.getTitle().isEmpty() || (book.getSize() != null && book.getSize() > 0)) {
       bookRepo.store(book);
-      logger.info("current repository size: " + getAllBooks("", "", -1).size());
+      logger.info("current repository size: " + getAllBooks("", "", null).size());
     } else {
       logger.info("try to save empty book");
     }
