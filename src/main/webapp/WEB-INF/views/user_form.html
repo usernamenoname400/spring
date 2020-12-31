@@ -1,0 +1,41 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New user editor</title>
+    <meta charset="UTF-8">
+    <style>
+        #root_container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+        }
+        table {
+            margin: 25px;
+        }
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+        .bigbutton {
+            width: 100%;
+            alignment: center;
+        }
+    </style>
+</head>
+<body>
+<div id="root_container">
+    <form method="post" th:action="@{/user/save}" th:object="${user}">
+        <table>
+            <tr>
+                <td><input type="text" placeholder="login" th:field="*{login}"/></td>
+                <td><input type="password" placeholder="password" th:field="*{password}"/></td>
+                <td><input type="name" placeholder="name" th:field="*{name}"/></td>
+            </tr>
+            <tr>
+                <td colspan="3"><input class="bigbutton" type="submit" value="Register"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

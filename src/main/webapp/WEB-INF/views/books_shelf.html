@@ -1,0 +1,89 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My book shelf</title>
+    <meta charset="UTF-8">
+    <style>
+        #root_container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #books {
+            width: 70%;
+            border-collapse: collapse;
+        }
+        table {
+            margin: 25px;
+        }
+        .remove {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        th {
+            text-align: center;
+        }
+        th,td {
+            border-bottom: 1px solid #ddd;
+        }
+        table.remove td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+  <div id="root_container">
+      <form method="post" th:action="@{/books/generate}">
+          <input type="submit" value="Generate"/>
+      </form>
+      <form method="post" th:action="@{/books/save}" th:object="${book}">
+          <table class="add">
+              <tr>
+                  <td><input type="text" placeholder="author" th:field="*{author}"/></td>
+                  <td><input type="text" placeholder="book title" th:field="*{title}"/></td>
+                  <td><input type="text" placeholder="size (pages)" th:field="*{size}"/></td>
+                  <td><input type="submit" value="Save"/></td>
+              </tr>
+          </table>
+      </form>
+
+      <form method="post" th:action="@{/books/remove}">
+          <table class="remove">
+              <tr>
+                  <td><input type="text" placeholder="id number to remove" th:name="bookIdToRemove"/></td>
+                  <td rowspan="4"><input type="submit" value="Remove"/></td>
+              </tr>
+              <tr><td><input type="text" placeholder="author to remove" th:name="bookAuthorToRemove"/></td></tr>
+              <tr><td><input type="text" placeholder="title to remove" th:name="bookTitleToRemove"/></td></tr>
+              <tr><td><input type="text" placeholder="size to remove" th:name="bookSizeToRemove"/></td></tr>
+          </table>
+      </form>
+
+      <form method="get" th:action="@{/books/shelf}">
+          <table id="books">
+              <tr>
+                  <th>id</th>
+                  <th>author</th>
+                  <th>title</th>
+                  <th>size</th>
+              </tr>
+              <tr>
+                  <th>&nbsp;</th>
+                  <th><input type="text" placeholder="filter" th:value="${filterByAuthor}" th:name="filterByAuthor"></th>
+                  <th><input type="text" placeholder="filter" th:value="${filterByTitle}" th:name="filterByTitle"></th>
+                  <th><input type="text" placeholder="filter" th:value="${filterBySize}" th:name="filterBySize"></th>
+              </tr>
+              <tr>
+                  <th colspan="4"><input type="submit" value="Filter books"></th>
+              </tr>
+              <tr th:each="book: ${bookList}">
+                  <td th:text="${book.id}"></td>
+                  <td th:text="${book.author}"></td>
+                  <td th:text="${book.title}"></td>
+                  <td th:text="${book.size}"></td>
+              </tr>
+          </table>
+      </form>
+  </div>
+</body>
+</html>
