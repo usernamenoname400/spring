@@ -33,29 +33,38 @@
 </head>
 <body>
   <div id="root_container">
-      <form method="post" th:action="@{/books/generate}">
-          <input type="submit" value="Generate"/>
-      </form>
       <form method="post" th:action="@{/books/save}" th:object="${book}">
           <table class="add">
               <tr>
                   <td><input type="text" placeholder="author" th:field="*{author}"/></td>
                   <td><input type="text" placeholder="book title" th:field="*{title}"/></td>
                   <td><input type="text" placeholder="size (pages)" th:field="*{size}"/></td>
-                  <td><input type="submit" value="Save"/></td>
+                  <td>
+                      <input type="submit" value="Save"/>
+                      <p th:if="${#fields.hasErrors()}">Size must be a number less than 9999</p>
+                  </td>
               </tr>
           </table>
       </form>
 
       <form method="post" th:action="@{/books/remove}">
-          <table class="remove">
+          <table class="remove" th:object="${bookIdToRemove}">
               <tr>
-                  <td><input type="text" placeholder="id number to remove" th:name="bookIdToRemove"/></td>
+                  <td><input type="text" placeholder="id number to remove" th:field="*{id}"/></td>
                   <td rowspan="4"><input type="submit" value="Remove"/></td>
               </tr>
-              <tr><td><input type="text" placeholder="author to remove" th:name="bookAuthorToRemove"/></td></tr>
-              <tr><td><input type="text" placeholder="title to remove" th:name="bookTitleToRemove"/></td></tr>
-              <tr><td><input type="text" placeholder="size to remove" th:name="bookSizeToRemove"/></td></tr>
+<!--              <tr><td><input type="text" placeholder="author to remove" th:name="bookAuthorToRemove"/></td></tr>-->
+<!--              <tr><td><input type="text" placeholder="title to remove" th:name="bookTitleToRemove"/></td></tr>-->
+<!--              <tr><td><input type="text" placeholder="size to remove" th:name="bookSizeToRemove"/></td></tr>-->
+              <tr th:if="${#fields.hasErrors()}">
+                  <td>Id is wrong or not found</td>
+              </tr>
+          </table>
+      </form>
+
+      <form method="post" th:action="@{/books/uploadFile}" enctype="multipart/form-data">
+          <table>
+              <tr><td><input type="file" name="file"/></td><td><input type="submit" value="Upload"/></td></tr>
           </table>
       </form>
 

@@ -44,13 +44,13 @@ public class IdProvider implements InitializingBean, DisposableBean, BeanPostPro
 
   @Override
   public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-    logger.info("POST PROCESS BEFORE INIT of bean \"" + beanName + "\"");
+    //logger.info("POST PROCESS BEFORE INIT of bean \"" + beanName + "\"");
     return bean;
   }
 
   @Override
   public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-    logger.info("POST PROCESS AFTER INIT of bean \"" + beanName + "\"");
+    //logger.info("POST PROCESS AFTER INIT of bean \"" + beanName + "\"");
     return bean;
   }
 

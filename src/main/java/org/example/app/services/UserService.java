@@ -44,7 +44,7 @@ public class UserService implements ApplicationContextAware {
     userRepo = appCtx.getBean(UserRepository.class);
   }
 
-  public boolean removeUserById(String userIdToRemove) {
+  public boolean removeUserById(Integer userIdToRemove) {
     return userRepo.removeItemById(userIdToRemove);
   }
 }

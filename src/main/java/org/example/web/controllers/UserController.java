@@ -38,7 +38,7 @@ public class UserController {
   }
 
   @PostMapping("/remove")
-  public String removeBook(@RequestParam(value="userIdToRemove") String userIdToRemove) {
+  public String removeBook(@RequestParam(value="userIdToRemove") Integer userIdToRemove) {
     userService.removeUserById(userIdToRemove);
     return "redirect:/login";
   }

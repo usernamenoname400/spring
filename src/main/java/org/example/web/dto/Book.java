@@ -1,8 +1,11 @@
 package org.example.web.dto;
 
+import javax.validation.constraints.Digits;
+
 public class Book extends BaseItem {
   private String author;
   private String title;
+  @Digits(integer = 4, fraction = 0)
   private Integer size;
 
   public String getAuthor() {

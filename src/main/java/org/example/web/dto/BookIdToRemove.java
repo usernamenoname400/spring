@@ -1,6 +1,9 @@
 package org.example.web.dto;
 
-public class BaseItem {
+import javax.validation.constraints.NotNull;
+
+public class BookIdToRemove {
+  @NotNull
   private Integer id;
 
   public Integer getId() {
@@ -9,12 +12,5 @@ public class BaseItem {
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  @Override
-  public String toString() {
-    return "BaseItem{" +
-           "id=" + id +
-           '}';
   }
 }

@@ -22,7 +22,7 @@ public class LoginService implements ApplicationContextAware {
       return false;
     } else {
       logger.info("Try authenticate with user-form: " + loginForm);
-      return users.matchLoginPassword(loginForm.getUserName(), loginForm.getPassword());
+      return users.matchLoginPassword(loginForm.getUsername(), loginForm.getPassword());
     }
   }
 

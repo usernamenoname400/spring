@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
   private final ProjectRepository<Book> bookRepo;
-  private Logger logger = Logger.getLogger(BookService.class);
+  private final Logger logger = Logger.getLogger(BookService.class);
 
   @Autowired
   public BookService(BookRepository bookRepo) {
@@ -32,7 +32,7 @@ public class BookService {
         (filterByAuthor == null || filterByAuthor.equals("")) &&
         (filterByTitle == null || filterByTitle.equals("")) &&
         (filterBySize == null || filterBySize.intValue() <= 0)
-        ) {
+    ) {
       logger.info("without filters");
       return bookRepo.retrieveAll();
     } else {
@@ -60,19 +60,20 @@ public class BookService {
     }
   }
 
-  public boolean removeBook(String idToRemove, String authorToRemove, String titleToRemove, Integer sizeToRemove) {
+  public boolean removeBook(Integer idToRemove, String authorToRemove, String titleToRemove, Integer sizeToRemove) {
     logger.info("Remove book: id=" + idToRemove + ", author='" + authorToRemove + "', title='" + titleToRemove + "', " +
                 "size=" + sizeToRemove);
     if (idToRemove != null) {
       if (bookRepo.removeItemById(idToRemove)) {
         logger.info("removed 1 books");
+        return true;
       } else {
         logger.info("removed 0 books");
+        return false;
       }
-    } else
-    if (authorToRemove != null && !authorToRemove.equals("")) {
+    } else if (authorToRemove != null && !authorToRemove.equals("")) {
       int n = 0;
-      for (Book book: bookRepo.retrieveAll()) {
+      for (Book book : bookRepo.retrieveAll()) {
         if (book.getAuthor().matches(authorToRemove.replace("*", "(.+)"))) {
           bookRepo.removeItemById(book.getId());
           n++;
@@ -80,10 +81,9 @@ public class BookService {
       }
       logger.info("removed " + n + " books");
       return true;
-    } else
-    if (titleToRemove != null && !titleToRemove.equals("")) {
+    } else if (titleToRemove != null && !titleToRemove.equals("")) {
       int n = 0;
-      for (Book book: bookRepo.retrieveAll()) {
+      for (Book book : bookRepo.retrieveAll()) {
         if (book.getTitle().matches(titleToRemove.replace("*", "(.+)"))) {
           bookRepo.removeItemById(book.getId());
           n++;
@@ -92,10 +92,9 @@ public class BookService {
       }
       logger.info("removed " + n + " books");
       return true;
-    } else
-    if (sizeToRemove != null) {
+    } else if (sizeToRemove != null) {
       int n = 0;
-      for (Book book: bookRepo.retrieveAll()) {
+      for (Book book : bookRepo.retrieveAll()) {
         if (book.getSize().equals(sizeToRemove)) {
           bookRepo.removeItemById(book.getId());
           n++;
@@ -106,55 +105,5 @@ public class BookService {
       return true;
     }
     return false;
-  }
-
-  public void generateBooks() {
-    Book book = new Book();
-    book.setAuthor("Pushkin");
-    book.setTitle("Skazka o pope");
-    book.setSize(101);
-    bookRepo.store(book);
-
-    book = new Book();
-    book.setAuthor("Pushkin");
-    book.setTitle("Skazka o pope");
-    book.setSize(121);
-    bookRepo.store(book);
-
-    book = new Book();
-    book.setAuthor("Pushkin");
-    book.setTitle("Capitanskaya dochka");
-    book.setSize(230);
-    bookRepo.store(book);
-
-    book = new Book();
-    book.setAuthor("Pushkin");
-    book.setTitle("Metel");
-    book.setSize(50);
-    bookRepo.store(book);
-
-    book = new Book();
-    book.setAuthor("Pushkin");
-    book.setTitle("Capitanskaya dochka");
-    book.setSize(228);
-    bookRepo.store(book);
-
-    book = new Book();
-    book.setAuthor("Pushkin");
-    book.setTitle("Pikovaya dama");
-    book.setSize(230);
-    bookRepo.store(book);
-
-    book = new Book();
-    book.setAuthor("Chekhov");
-    book.setTitle("Perpetuum mobile");
-    book.setSize(230);
-    bookRepo.store(book);
-
-    book = new Book();
-    book.setAuthor("Chekhov");
-    book.setTitle("V Bane");
-    book.setSize(50);
-    bookRepo.store(book);
   }
 }
