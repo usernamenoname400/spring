@@ -2,49 +2,38 @@ package org.example.app.services;
 
 import org.apache.log4j.Logger;
 import org.example.web.dto.User;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
-public class UserService implements ApplicationContextAware {
-  private ProjectRepository<User> userRepo;
-  private final Logger logger = Logger.getLogger(BookService.class);
-  private ApplicationContext appCtx;
+public class UserService {
+  private final Logger logger = Logger.getLogger(this.getClass());
+  private final AuthenticationManagerBuilder auth;
+  private final PasswordEncoder passwordEncoder;
 
-  public List<User> getAllUsers() {
-    return userRepo.retrieveAll();
+  @Autowired
+  public UserService(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder) {
+    this.auth = auth;
+    this.passwordEncoder = passwordEncoder;
   }
 
-  public boolean saveUser(User user) {
+  public boolean saveUser(User user) throws Exception {
     if (!user.getLogin().isEmpty() && !user.getPassword().isEmpty()) {
-      logger.info("current repository size: " + getAllUsers().size());
-      return userRepo.store(user);
+      logger.info(auth);
+      logger.info(passwordEncoder);
+      auth
+          .inMemoryAuthentication()
+          .withUser(user.getLogin())
+          .password(passwordEncoder.encode(user.getPassword()))
+          .roles("USER");
+      logger.info("user " + user + " saved");
+      return true;
     } else {
       logger.info("login or password is empty");
       return false;
     }
-  }
-
-  public boolean matchLoginPassword(String userLogin, String userPassword) {
-    for (User user: userRepo.retrieveAll()) {
-      if (user.getLogin().equals(userLogin)) {
-        return user.getPassword().equals(userPassword);
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    appCtx = applicationContext;
-    userRepo = appCtx.getBean(UserRepository.class);
-  }
-
-  public boolean removeUserById(Integer userIdToRemove) {
-    return userRepo.removeItemById(userIdToRemove);
   }
 }

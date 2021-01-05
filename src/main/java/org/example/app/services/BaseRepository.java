@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.example.web.dto.BaseItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class BaseRepository<T extends BaseItem> implements ProjectRepository<T> {

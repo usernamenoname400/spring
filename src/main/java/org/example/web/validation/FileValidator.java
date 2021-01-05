@@ -1,28 +1,30 @@
 package org.example.web.validation;
 
-import org.example.web.dto.UploadFile;
 import org.springframework.stereotype.Component;
-
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class FileValidator implements Validator {
+public class FileValidator {
 
   public boolean supports(Class<?> testClass) {
     return MultipartFile.class.isAssignableFrom(testClass);
   }
 
-  @Override
-  public void validate(Object target, Errors errors) {
-    UploadFile uploadFile = (UploadFile) target;
-
-    MultipartFile multipartFile = uploadFile.getFile();
-
-    if (multipartFile.getName() == null || multipartFile.getName().equals("") || multipartFile.getSize() == 0) {
-        errors.rejectValue("files", "missing.file");
+  public String validate(Object target) {
+    if (target == null) {
+      return "Cannot validate null";
     }
-  }
+    if (!supports(target.getClass())) {
+      return "Unsupported class " + target.getClass().getName();
+    }
+    MultipartFile multipartFile = (MultipartFile) target;
 
+    if (multipartFile.getOriginalFilename() == null || multipartFile.getOriginalFilename().equals("")) {
+      return "File name is empty";
+    }
+    if (multipartFile.getSize() == 0) {
+      return "File is empty";
+    }
+    return "";
+  }
 }

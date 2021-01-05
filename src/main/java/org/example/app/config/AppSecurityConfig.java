@@ -54,6 +54,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     web
         .debug(true)
         .ignoring()
-        .antMatchers("/images/**");
+        .antMatchers("/images/**")
+        .and()
+        .ignoring()
+        .antMatchers("/user/**");
   }
 }
