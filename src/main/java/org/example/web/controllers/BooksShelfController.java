@@ -2,6 +2,7 @@ package org.example.web.controllers;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.example.app.exceptions.BookShelfException;
 import org.example.app.services.BookService;
 import org.example.app.services.FileService;
 import org.example.web.dto.Book;
@@ -150,6 +151,10 @@ public class BooksShelfController {
 
   @RequestMapping("/file/{name:.+}")
   public void getFile(@PathVariable("name") String name, HttpServletResponse response) throws Exception {
+    if (!fileService.isFileExists(name)) {
+      throw new BookShelfException("File not found");
+    }
+
     File serverFile = fileService.getServerFile(name);
 
     if (serverFile.exists()) {
@@ -165,5 +170,12 @@ public class BooksShelfController {
       }
     }
     throw new Exception("File " + name + " not found");
+  }
+
+  @ExceptionHandler(BookShelfException.class)
+  public String handleBookShelfException(Model model, BookShelfException ex) {
+    logger.info("raised BookShelfException, show custom page");
+    model.addAttribute("errorMessage", ex.getMessage());
+    return "errors/404-1";
   }
 }
