@@ -1,7 +1,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>My book shelf</title>
-    <meta charset="UTF-8">
+    <meta lang="en" charset="UTF-8">
     <style>
         #root_container {
             position: absolute;
@@ -26,16 +26,26 @@
         th,td {
             border-bottom: 1px solid #ddd;
         }
+        td.input {
+            padding: 3px;
+        }
         table.remove td {
             border-bottom: none;
         }
+        .error {
+            font-weight: bold;
+            color: red;
+        }
+        .info {
+            font-weight: normal;
+            color: lightgreen;
+        }
+        .win {width: 90%; height: 400px; overflow: scroll;}
+        .errinp {background-color: red; }
     </style>
 </head>
 <body>
   <div id="root_container">
-      <form method="post" th:action="@{/books/generate}">
-          <input type="submit" value="Generate"/>
-      </form>
       <form method="post" th:action="@{/books/save}" th:object="${book}">
           <table class="add">
               <tr>
@@ -44,22 +54,56 @@
                   <td><input type="text" placeholder="size (pages)" th:field="*{size}"/></td>
                   <td><input type="submit" value="Save"/></td>
               </tr>
+              <tr th:each="err: ${#fields.errors()}">
+                  <td colspan="4" class="error" th:text="${err}"></td>
+              </tr>
           </table>
       </form>
 
       <form method="post" th:action="@{/books/remove}">
-          <table class="remove">
+          <table class="remove" th:object="${bookToRemove}">
               <tr>
-                  <td><input type="text" placeholder="id number to remove" th:name="bookIdToRemove"/></td>
-                  <td rowspan="4"><input type="submit" value="Remove"/></td>
+                  <td class="input">
+                      <input type="text" placeholder="id number to remove" th:field="*{id}"/>
+                  </td>
+                  <td rowspan="4">
+                      <input type="submit" value="Remove"/>
+                      <div th:if="${#fields.hasErrors()}">
+                          <p class="error" th:each="err : ${#fields.errors()}" th:text="${err}"></p>
+                      </div>
+                  </td>
               </tr>
-              <tr><td><input type="text" placeholder="author to remove" th:name="bookAuthorToRemove"/></td></tr>
-              <tr><td><input type="text" placeholder="title to remove" th:name="bookTitleToRemove"/></td></tr>
-              <tr><td><input type="text" placeholder="size to remove" th:name="bookSizeToRemove"/></td></tr>
+              <tr>
+                  <td th:attr="class=${#fields.hasErrors('author') ? 'input errinp' : 'input'}">
+                      <input type="text" placeholder="author to remove" th:field="*{author}"/>
+                  </td>
+              </tr>
+              <tr>
+                  <td th:attr="class=${#fields.hasErrors('title') ? 'input errinp' : 'input'}">
+                      <input type="text" placeholder="title to remove" th:field="*{title}"/>
+                  </td>
+              </tr>
+              <tr>
+                  <td th:attr="class=${#fields.hasErrors('size') ? 'input errinp' : 'input'}">
+                      <input type="text" placeholder="size to remove" th:field="*{size}"/>
+                  </td>
+              </tr>
           </table>
       </form>
 
-      <form method="get" th:action="@{/books/shelf}">
+      <form method="post" th:action="@{/books/uploadFile}" enctype="multipart/form-data" th:object="${uploadFile}">
+          <table>
+              <tr><td><input type="file" th:field="*{file}"/></td><td><input type="submit" value="Upload"/></td></tr>
+              <tr th:if="*{errorMessage != null}"><td colspan="2" th:text="*{errorMessage}" class="error"></td></tr>
+              <tr th:if="*{infoMessage != null}"><td colspan="2" th:text="*{infoMessage}" class="info"></td></tr>
+          </table>
+      </form>
+      <table>
+          <th>Uploaded files list</th>
+          <tr th:each="file: ${fileList}"><td><a th:text="${file.name}" th:href="@{'/books/file/'+${file.name}}"></a></td></tr>
+      </table>
+
+      <form method="get" th:action="@{/books/shelf}" th:object="${bookToFilter}">
           <table id="books">
               <tr>
                   <th>id</th>
@@ -68,10 +112,20 @@
                   <th>size</th>
               </tr>
               <tr>
-                  <th>&nbsp;</th>
-                  <th><input type="text" placeholder="filter" th:value="${filterByAuthor}" th:name="filterByAuthor"></th>
-                  <th><input type="text" placeholder="filter" th:value="${filterByTitle}" th:name="filterByTitle"></th>
-                  <th><input type="text" placeholder="filter" th:value="${filterBySize}" th:name="filterBySize"></th>
+                  <td>&nbsp;
+                      <div th:if="${#fields.hasErrors()}" class="error">
+                          <p th:each="err : ${#fields.errors()}"></p>
+                      </div>
+                  </td>
+                  <td th:attr="class=${#fields.hasErrors('author') ? 'input errinp' : 'input'}">
+                      <input type="text" placeholder="filter" th:field="*{author}">
+                  </td>
+                  <td th:attr="class=${#fields.hasErrors('title') ? 'input errinp' : 'input'}">
+                      <input type="text" placeholder="filter" th:field="*{title}">
+                  </td>
+                  <td th:attr="class=${#fields.hasErrors('size') ? 'input errinp' : 'input'}">
+                      <input type="text" placeholder="filter" th:field="*{size}">
+                  </td>
               </tr>
               <tr>
                   <th colspan="4"><input type="submit" value="Filter books"></th>

@@ -30,16 +30,10 @@ public class UserController {
   }
 
   @PostMapping("/save")
-  public String saveBook(User user) {
+  public String saveBook(User user) throws Exception {
     if (userService.saveUser(user)) {
       return "redirect:/login";
     }
     return "redirect:/user/edit";
-  }
-
-  @PostMapping("/remove")
-  public String removeBook(@RequestParam(value="userIdToRemove") Integer userIdToRemove) {
-    userService.removeUserById(userIdToRemove);
-    return "redirect:/login";
   }
 }

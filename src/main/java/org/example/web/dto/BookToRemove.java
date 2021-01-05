@@ -1,29 +1,17 @@
 package org.example.web.dto;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-public class Book extends BaseItem {
-  @NotNull(message="Author must be not empty")
-  @NotEmpty(message="Author must be not empty")
+public class BookToRemove {
+  private Integer id;
   private String author;
-  @NotNull(message="Title must be not empty")
-  @NotEmpty(message="Title must be not empty")
   private String title;
-  @NotNull(message="Size must be not empty")
-  @Digits(integer = 4, fraction = 0, message="Size must be integer and less than 9999")
   private Integer size;
 
-  public Book(String author, String title, Integer size)
-  {
-    this.author = author;
-    this.title = title;
-    this.size = size;
+  public Integer getId() {
+    return id;
   }
 
-  public Book()
-  {
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public String getAuthor() {
@@ -68,10 +56,10 @@ public class Book extends BaseItem {
 
   @Override
   public String toString() {
-    return "Book{" +
-           "id=" + getId() +
-           ", author='" + author + '\'' +
-           ", title='" + title + '\'' +
+    return "BookToRemove{" +
+           "id=" + id +
+           ", author='" + author + "'" +
+           ", title='" + title + "'" +
            ", size=" + size +
            '}';
   }
